@@ -4,31 +4,48 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>शासकीय ITI शेवगाव - NCVT रेकॉर्ड्स</title>
+  
   <!-- PWA Settings -->
-<link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1E3A8A">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="ITI Shevgaon">
+
   <!-- Tailwind CSS & FontAwesome -->
   <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <!-- Robust PDF Libraries: jsPDF + AutoTable (Never exports blank) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-<style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- html2pdf Library for Direct PDF Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
     body { user-select: none; -webkit-tap-highlight-color: transparent; }
     .bottom-nav-active { color: #1E3A8A; font-weight: 700; }
+    
+    /* PDF Print Stylesheet */
+    @media print {
+      body { background: white !important; }
+      nav, header, button { display: none !important; }
+    }
+    .pdf-container {
+      background: white;
+      color: #111;
+      font-family: Arial, sans-serif;
+    }
+  </style>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans pb-24">
+
   <!-- ================= १. लॉगिन स्क्रीन ================= -->
-<div id="loginScreen" class="fixed inset-0 z-50 bg-slate-100 flex flex-col justify-center items-center p-4">
+  <div id="loginScreen" class="fixed inset-0 z-50 bg-slate-100 flex flex-col justify-center items-center p-4">
     <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl p-6 border border-slate-200 text-center">
       <div class="w-16 h-16 bg-blue-900 text-white rounded-full flex items-center justify-center mx-auto text-2xl shadow-md">
         <i class="fa-solid fa-graduation-cap"></i>
       </div>
       <h1 class="text-xl font-bold text-blue-900 mt-3">शासकीय ITI शेवगाव</h1>
       <p class="text-xs text-slate-500 mb-6 font-medium">इलेक्ट्रॉनिक्स मेकॅनिक (First Year)</p>
+
       <div class="space-y-4 text-left">
         <div>
           <label class="text-xs font-semibold text-slate-600 block mb-1">युझर आयडी</label>
@@ -49,9 +66,10 @@
         </button>
       </div>
     </div>
-</div>
+  </div>
+
   <!-- ================= २. ॲप हेडर ================= -->
-<header class="bg-blue-900 text-white px-4 py-3 sticky top-0 z-40 shadow flex justify-between items-center">
+  <header class="bg-blue-900 text-white px-4 py-3 sticky top-0 z-40 shadow flex justify-between items-center">
     <div>
       <h1 class="font-bold text-base leading-tight">शासकीय ITI शेवगाव</h1>
       <p class="text-[11px] text-blue-200">पगारे बी. डब्ल्यू. | इलेक्ट्रॉनिक्स मेकॅनिक</p>
@@ -60,8 +78,10 @@
       <i class="fa-solid fa-plus"></i> नवीन जोडा
     </button>
   </header>
+
   <!-- ================= ३. मुख्य कंटेनर ================= -->
-<main class="p-4 max-w-md mx-auto space-y-4">
+  <main class="p-4 max-w-md mx-auto space-y-4">
+    
     <!-- टॅब १: डॅशबोर्ड -->
     <section id="tabDashboard" class="space-y-4">
       <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white rounded-xl p-4 shadow">
@@ -81,18 +101,16 @@
         </div>
       </div>
 
-      <!-- NCVT PDF Export Quick Action Card -->
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2.5">
-        <h3 class="text-xs font-bold uppercase text-slate-500 flex items-center gap-1.5">
-          <i class="fa-solid fa-file-pdf text-red-600"></i> NCVT अधिकृत अहवाल डाऊनलोड (PDF)
-        </h3>
-        <button onclick="exportAttendancePDFDirect()" class="w-full flex items-center justify-between p-3 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-xs font-bold border border-red-200 transition">
-          <span class="flex items-center gap-2"><i class="fa-solid fa-file-invoice text-base"></i> मासिक हजेरी अहवाल (NCVT Format)</span>
-          <i class="fa-solid fa-arrow-down-to-bracket"></i>
+      <!-- झटपट PDF डाउनलोड कार्ड -->
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2">
+        <h3 class="text-xs font-bold uppercase text-slate-500">अधिकृत NCVT अहवाल डाउनलोड</h3>
+        <button onclick="exportAttendancePDF()" class="w-full flex items-center justify-between p-3 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-xs font-bold border border-red-200 transition">
+          <span class="flex items-center gap-2"><i class="fa-solid fa-file-pdf text-base"></i> मासिक हजेरी अहवाल (PDF)</span>
+          <i class="fa-solid fa-download"></i>
         </button>
-        <button onclick="exportBatchProgressPDFDirect()" class="w-full flex items-center justify-between p-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-bold border border-indigo-200 transition">
-          <span class="flex items-center gap-2"><i class="fa-solid fa-table-list text-base"></i> एकत्रित प्रोग्रेस कार्ड शीट (Batch PDF)</span>
-          <i class="fa-solid fa-arrow-down-to-bracket"></i>
+        <button onclick="exportBatchProgressPDF()" class="w-full flex items-center justify-between p-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-bold border border-indigo-200 transition">
+          <span class="flex items-center gap-2"><i class="fa-solid fa-file-lines text-base"></i> एकत्रित प्रोग्रेस कार्ड शीट (PDF)</span>
+          <i class="fa-solid fa-download"></i>
         </button>
       </div>
     </section>
@@ -104,7 +122,7 @@
           <h3 class="font-bold text-sm text-slate-700">दैनंदिन हजेरी रजिस्टर</h3>
           <span class="text-xs text-slate-500" id="todayDate"></span>
         </div>
-        <button onclick="exportAttendancePDFDirect()" class="bg-red-600 hover:bg-red-700 text-white text-xs px-2.5 py-1.5 rounded-lg font-bold flex items-center gap-1 shadow">
+        <button onclick="exportAttendancePDF()" class="bg-red-600 hover:bg-red-700 text-white text-xs px-2.5 py-1.5 rounded-lg font-bold flex items-center gap-1 shadow">
           <i class="fa-solid fa-file-pdf"></i> हजेरी PDF
         </button>
       </div>
@@ -121,21 +139,23 @@
     <section id="tabProgress" class="hidden space-y-3">
       <div class="flex justify-between items-center">
         <h3 class="font-bold text-sm text-slate-700">प्रशिक्षणार्थी प्रोग्रेस कार्ड</h3>
-        <button onclick="exportBatchProgressPDFDirect()" class="bg-blue-900 hover:bg-blue-800 text-white text-xs px-2.5 py-1.5 rounded-lg font-bold flex items-center gap-1 shadow">
+        <button onclick="exportBatchProgressPDF()" class="bg-blue-900 hover:bg-blue-800 text-white text-xs px-2.5 py-1.5 rounded-lg font-bold flex items-center gap-1 shadow">
           <i class="fa-solid fa-download"></i> सर्व PDF
         </button>
       </div>
       <div id="progressList" class="space-y-3"></div>
     </section>
 
-</main>
+  </main>
+
   <!-- ================= ४. नवीन शिकाऊ फॉर्म मॉडेल ================= -->
-<div id="addModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+  <div id="addModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white w-full max-w-sm rounded-t-2xl sm:rounded-2xl p-5 space-y-3 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-2">
         <h3 class="font-bold text-blue-900">नवीन प्रशिक्षणार्थी जोडा</h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
+
       <div class="flex flex-col items-center">
         <div class="w-16 h-16 rounded-full bg-slate-100 border border-slate-300 flex items-center justify-center overflow-hidden relative">
           <img id="previewImg" class="w-full h-full object-cover hidden" alt="Photo">
@@ -173,9 +193,10 @@
         नोंद सेव्ह करा
       </button>
     </div>
-</div>
+  </div>
+
   <!-- ================= ५. बॉटम नेव्हिगेशन बार ================= -->
-<nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around py-2 z-40 max-w-md mx-auto">
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around py-2 z-40 max-w-md mx-auto">
     <button onclick="switchTab('tabDashboard', this)" class="flex flex-col items-center text-xs text-slate-500 bottom-nav-active">
       <i class="fa-solid fa-gauge text-base"></i><span>डॅशबोर्ड</span>
     </button>
@@ -189,18 +210,22 @@
       <i class="fa-solid fa-id-card text-base"></i><span>प्रोग्रेस कार्ड</span>
     </button>
   </nav>
-  <!-- ================= ६. जावास्क्रिप्ट व थेट PDF लॉजिक ================= -->
-<script>
+
+  <!-- ================= ६. अदृश्य PDF जनरेशन टेम्पलेट्स ================= -->
+  <div id="pdfExportArea" class="hidden"></div>
+
+  <!-- ================= ७. जावास्क्रिप्ट लॉजिक ================= -->
+  <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Fail:', err));
       });
     }
 
-    let trainees = JSON.parse(localStorage.getItem('iti_shevgaon_records_v3')) || [
+    let trainees = JSON.parse(localStorage.getItem('iti_trainees_v2')) || [
       { 
         roll: "EM-01", 
-        name: "Sachin Ramesh Patil", 
+        name: "सचिन रमेश पाटील", 
         cat: "OBC", 
         stipend: "DVET", 
         amt: 500, 
@@ -215,7 +240,7 @@
       },
       { 
         roll: "EM-02", 
-        name: "Rohit Vilas Jadhav", 
+        name: "रोहित विलास जाधव", 
         cat: "SC", 
         stipend: "MahaDBT", 
         amt: 1500, 
@@ -237,10 +262,10 @@
     }
 
     function getGrade(m) {
-      if (m >= 85) return 'A+ (Excellent)';
-      if (m >= 70) return 'A (Good)';
-      if (m >= 60) return 'B (Average)';
-      return 'C (Needs Improvement)';
+      if (m >= 85) return 'A+ (उत्कृष्ट)';
+      if (m >= 70) return 'A (चांगले)';
+      if (m >= 60) return 'B (मध्यम)';
+      return 'C (सुधारणा आवश्यक)';
     }
 
     function loginApp() {
@@ -290,20 +315,20 @@
         safety: 12, accuracy: 28, finish: 20, method: 12, time: 8,
         attPercent: 90
       });
-      localStorage.setItem('iti_shevgaon_records_v3', JSON.stringify(trainees));
+      localStorage.setItem('iti_trainees_v2', JSON.stringify(trainees));
       closeModal();
       renderAll();
     }
 
     function toggleAtt(index) {
       trainees[index].present = !trainees[index].present;
-      localStorage.setItem('iti_shevgaon_records_v3', JSON.stringify(trainees));
+      localStorage.setItem('iti_trainees_v2', JSON.stringify(trainees));
       renderAttendance();
     }
 
     function updateComponentMark(index, field, val) {
       trainees[index][field] = Number(val);
-      localStorage.setItem('iti_shevgaon_records_v3', JSON.stringify(trainees));
+      localStorage.setItem('iti_trainees_v2', JSON.stringify(trainees));
       const tot = getTotalMarks(trainees[index]);
       document.getElementById(`totalSpan_${index}`).innerText = `${tot}/१०० (${getGrade(tot)})`;
     }
@@ -323,7 +348,7 @@
         <div class="bg-white p-3 rounded-xl border flex items-center justify-between shadow-sm">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden flex items-center justify-center font-bold text-xs text-slate-600">
-              ${t.photo ? `<img src="${t.photo}" class="w-full h-full object-cover">` : t.roll}
+              ${t.photo ? `<img src="\${t.photo}" class="w-full h-full object-cover">` : t.roll}
             </div>
             <div>
               <p class="font-bold text-sm leading-tight">${t.name}</p>
@@ -350,13 +375,13 @@
               </span>
             </div>
             <div class="text-[11px] space-y-2 pt-2 border-t text-slate-600">
-              <div class="flex justify-between"><span>सुरक्षा व साधनांची हाताळणी (१५):</span> <b>${t.safety || 12}</b></div>
+              <div class="flex justify-between"><span>सुरक्षा (१५):</span> <b>${t.safety || 12}</b></div>
               <input type="range" min="0" max="15" value="${t.safety || 12}" oninput="updateComponentMark(${i}, 'safety', this.value)" class="w-full h-1 bg-slate-200 rounded accent-blue-900">
               
-              <div class="flex justify-between"><span>कामाची अचूकता / डायमेंशन (३५):</span> <b>${t.accuracy || 28}</b></div>
+              <div class="flex justify-between"><span>अचूकता/डायमेंशन (३५):</span> <b>${t.accuracy || 28}</b></div>
               <input type="range" min="0" max="35" value="${t.accuracy || 28}" oninput="updateComponentMark(${i}, 'accuracy', this.value)" class="w-full h-1 bg-slate-200 rounded accent-blue-900">
 
-              <div class="flex justify-between"><span>फिनिशिंग व मांडणी (२५):</span> <b>${t.finish || 20}</b></div>
+              <div class="flex justify-between"><span>फिनिशिंग (२५):</span> <b>${t.finish || 20}</b></div>
               <input type="range" min="0" max="25" value="${t.finish || 20}" oninput="updateComponentMark(${i}, 'finish', this.value)" class="w-full h-1 bg-slate-200 rounded accent-blue-900">
             </div>
           </div>
@@ -376,7 +401,7 @@
                 <p class="text-xs text-slate-500">${t.roll} | प्रवर्ग: ${t.cat} | हजेरी: ${t.attPercent}%</p>
                 <p class="text-[11px] text-emerald-700 font-semibold mt-0.5">विद्यावेतन: ${t.stipend} (₹${t.amt}/-)</p>
               </div>
-              <button onclick="exportSingleProgressPDFDirect(${i})" class="text-xs bg-slate-100 hover:bg-slate-200 text-blue-900 px-2 py-1 rounded border font-semibold flex items-center gap-1 shadow-sm">
+              <button onclick="exportSingleProgressPDF(${i})" class="text-xs bg-slate-100 hover:bg-slate-200 text-blue-900 px-2 py-1 rounded border font-semibold flex items-center gap-1">
                 <i class="fa-solid fa-file-pdf text-red-600"></i> PDF
               </button>
             </div>
@@ -389,248 +414,264 @@
       }).join('');
     }
 
-    // ================= ७. थेट व्हेक्टर PDF जनरेशन (Never Blank) =================
+    // ================= ८. अधिकृत NCVT फॉरमॅट PDF एक्सपोर्ट फंक्शन्स =================
 
-    // १. मासिक हजेरी अहवाल PDF (Direct jsPDF + AutoTable)
-    function exportAttendancePDFDirect() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-      const curDate = new Date().toLocaleDateString('en-GB');
+    // १. मासिक हजेरी अहवाल (Monthly Attendance Register PDF)
+    function exportAttendancePDF() {
+      const area = document.getElementById('pdfExportArea');
+      const curMonthYear = new Date().toLocaleDateString('mr-IN', { month: 'long', year: 'numeric' });
+      
+      area.innerHTML = `
+        <div style="padding: 24px; font-family: Arial, sans-serif; color: #111; line-height: 1.4;">
+          <div style="text-align: center; border-bottom: 2px solid #1E3A8A; padding-bottom: 8px; margin-bottom: 12px;">
+            <h2 style="margin: 0; font-size: 18px; color: #1E3A8A; font-weight: bold;">शासकीय औद्योगिक प्रशिक्षण संस्था, शेवगाव</h2>
+            <h3 style="margin: 3px 0; font-size: 14px;">मासिक प्रशिक्षणार्थी उपस्थिती अहवाल (NCVT Format)</h3>
+            <p style="margin: 0; font-size: 11px; color: #555;">सत्र: २०२६ - २०२७ | महिना: ${curMonthYear}</p>
+          </div>
 
-      // Header
-      doc.setFillColor(30, 58, 138); // #1E3A8A
-      doc.rect(0, 0, 210, 24, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(14);
-      doc.setFont("helvetica", "bold");
-      doc.text("GOVERNMENT ITI SHEVGAON", 105, 10, { align: "center" });
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
-      doc.text("MONTHLY TRAINEE ATTENDANCE REPORT (NCVT FORMAT)", 105, 17, { align: "center" });
+          <table style="width: 100%; font-size: 11px; margin-bottom: 12px;">
+            <tr>
+              <td><b>ट्रेड:</b> Electronics Mechanic (First Year)</td>
+              <td style="text-align: right;"><b>शिल्प निदेशक:</b> पगारे बी. डब्ल्यू.</td>
+            </tr>
+          </table>
 
-      // Sub-header details
-      doc.setTextColor(30, 41, 59);
-      doc.setFontSize(9);
-      doc.setFont("helvetica", "bold");
-      doc.text("Trade: Electronics Mechanic (First Year)", 14, 32);
-      doc.text("Craft Instructor: Pagare B. W.", 14, 37);
-      doc.text("Session: 2026-2027", 150, 32);
-      doc.text("Date Generated: " + curDate, 150, 37);
+          <table style="width: 100%; border-collapse: collapse; font-size: 10px; text-align: center;">
+            <thead>
+              <tr style="background: #f1f5f9;">
+                <th style="border: 1px solid #999; padding: 6px;">अ.क्र.</th>
+                <th style="border: 1px solid #999; padding: 6px;">रोल नं.</th>
+                <th style="border: 1px solid #999; padding: 6px; text-align: left;">प्रशिक्षणार्थ्याचे नाव</th>
+                <th style="border: 1px solid #999; padding: 6px;">प्रवर्ग</th>
+                <th style="border: 1px solid #999; padding: 6px;">विद्यावेतन योजना</th>
+                <th style="border: 1px solid #999; padding: 6px;">आजची हजेरी</th>
+                <th style="border: 1px solid #999; padding: 6px;">मासिक हजेरी %</th>
+                <th style="border: 1px solid #999; padding: 6px;">रिमार्क</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${trainees.map((t, idx) => `
+                <tr>
+                  <td style="border: 1px solid #999; padding: 6px;">\${idx + 1}</td>
+                  <td style="border: 1px solid #999; padding: 6px; font-weight: bold;">\${t.roll}</td>
+                  <td style="border: 1px solid #999; padding: 6px; text-align: left; font-weight: bold;">\${t.name}</td>
+                  <td style="border: 1px solid #999; padding: 6px;">\${t.cat}</td>
+                  <td style="border: 1px solid #999; padding: 6px;">${t.stipend} (₹${t.amt})</td>
+                  <td style="border: 1px solid #999; padding: 6px; font-weight: bold; color: \${t.present ? 'green' : 'red'};">
+                    \${t.present ? 'P (हजर)' : 'A (गैरहजर)'}
+                  </td>
+                  <td style="border: 1px solid #999; padding: 6px; font-weight: bold;">\${t.attPercent}%</td>
+                  <td style="border: 1px solid #999; padding: 6px;">\${t.attPercent < 75 ? 'कमी उपस्थिती' : 'नियमित'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
 
-      // Table Content
-      const tableData = trainees.map((t, idx) => [
-        idx + 1,
-        t.roll,
-        t.name,
-        t.cat,
-        `${t.stipend} (Rs.${t.amt})`,
-        t.present ? "Present (P)" : "Absent (A)",
-        `${t.attPercent}%`,
-        t.attPercent < 75 ? "Warning (<75%)" : "Regular"
-      ]);
+          <div style="margin-top: 50px; display: flex; justify-content: space-between; font-size: 11px;">
+            <div style="text-align: center; width: 200px;">
+              <br><br>
+              <b>(पगारे बी. डब्ल्यू.)</b><br>
+              शिल्प निदेशक, Electronics Mechanic
+            </div>
+            <div style="text-align: center; width: 200px;">
+              <br><br>
+              <b>प्राचार्य / गट निदेशक</b><br>
+              शासकीय आयटीआय शेवगाव
+            </div>
+          </div>
+        </div>
+      `;
 
-      doc.autoTable({
-        startY: 42,
-        head: [['Sr', 'Roll No', 'Trainee Name', 'Category', 'Stipend', 'Status', 'Att %', 'Remark']],
-        body: tableData,
-        theme: 'grid',
-        headStyles: { fillColor: [30, 58, 138], textColor: 255, fontStyle: 'bold', halign: 'center' },
-        styles: { fontSize: 8, cellPadding: 2.5, font: 'helvetica' },
-        columnStyles: {
-          0: { halign: 'center', cellWidth: 10 },
-          1: { halign: 'center', fontStyle: 'bold', cellWidth: 20 },
-          2: { fontStyle: 'bold', cellWidth: 45 },
-          3: { halign: 'center', cellWidth: 18 },
-          4: { cellWidth: 32 },
-          5: { halign: 'center', fontStyle: 'bold', cellWidth: 22 },
-          6: { halign: 'center', fontStyle: 'bold', cellWidth: 18 },
-          7: { halign: 'center', cellWidth: 25 }
-        }
-      });
-
-      // Signatures
-      const finalY = doc.lastAutoTable.finalY + 30;
-      doc.setFontSize(9);
-      doc.text("____________________________", 25, finalY);
-      doc.text("(Pagare B. W.)", 35, finalY + 5);
-      doc.text("Craft Instructor", 35, finalY + 9);
-
-      doc.text("____________________________", 145, finalY);
-      doc.text("Principal / Vice Principal", 150, finalY + 5);
-      doc.text("Govt ITI Shevgaon", 154, finalY + 9);
-
-      doc.save(`ITI_Shevgaon_Attendance_${curDate.replace(/\//g, '-')}.pdf`);
+      html2pdf().set({
+        margin: 10,
+        filename: `ITI_Shevgaon_Attendance_${curMonthYear}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }).from(area).save();
     }
 
-    // २. वैयक्तिक प्रोग्रेस कार्ड PDF (Direct jsPDF)
-    function exportSingleProgressPDFDirect(i) {
+    // २. वैयक्तिक प्रोग्रेस कार्ड (Single Trainee Progress Card PDF)
+    function exportSingleProgressPDF(i) {
       const t = trainees[i];
       const tot = getTotalMarks(t);
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      const area = document.getElementById('pdfExportArea');
 
-      // Title Banner
-      doc.setFillColor(30, 58, 138);
-      doc.rect(0, 0, 210, 24, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(13);
-      doc.setFont("helvetica", "bold");
-      doc.text("GOVERNMENT ITI SHEVGAON, AHILYANAGAR", 105, 10, { align: "center" });
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
-      doc.text("TRAINEE MONTHLY PROGRESS CARD (DGT / NCVT FORMAT)", 105, 17, { align: "center" });
+      area.innerHTML = `
+        <div style="padding: 24px; font-family: Arial, sans-serif; color: #111; line-height: 1.5;">
+          <div style="text-align: center; border-bottom: 2px solid #1E3A8A; padding-bottom: 8px; margin-bottom: 16px;">
+            <h2 style="margin: 0; font-size: 18px; color: #1E3A8A; font-weight: bold;">शासकीय औद्योगिक प्रशिक्षण संस्था, शेवगाव</h2>
+            <h3 style="margin: 3px 0; font-size: 13px;">DGT / NCVT शिकाऊ मासिक प्रगती व मूल्यांकन कार्ड (Progress Card)</h3>
+            <p style="margin: 0; font-size: 11px; color: #666;">सत्र २०२६ – २०२७ | प्रथम वर्ष (First Year)</p>
+          </div>
 
-      // Trainee Profile Box
-      doc.setDrawColor(203, 213, 225);
-      doc.setFillColor(248, 250, 252);
-      doc.roundedRect(14, 30, 182, 38, 3, 3, 'FD');
+          <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 16px; border: 1px solid #ccc;">
+            <tr>
+              <td style="padding: 6px; width: 25%; background: #f8fafc; font-weight: bold;">प्रशिक्षणार्थ्याचे नाव:</td>
+              <td style="padding: 6px; width: 45%; font-weight: bold;">${t.name}</td>
+              <td rowspan="4" style="width: 30%; text-align: center; border-left: 1px solid #ccc; vertical-align: middle;">
+                ${t.photo ? `<img src="\${t.photo}" style="width: 80px; height: 95px; object-fit: cover; border: 1px solid #999;">` : '<div style="width: 80px; height: 95px; border: 1px dashed #999; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 10px;">फोटो</div>'}
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 6px; background: #f8fafc; font-weight: bold;">रोल नंबर:</td>
+              <td style="padding: 6px;">${t.roll}</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px; background: #f8fafc; font-weight: bold;">ट्रेड व वर्ष:</td>
+              <td style="padding: 6px;">Electronics Mechanic (First Year)</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px; background: #f8fafc; font-weight: bold;">प्रवर्ग व विद्यावेतन:</td>
+              <td style="padding: 6px;">${t.cat} | ${t.stipend} (₹${t.amt}/- महिना)</td>
+            </tr>
+          </table>
 
-      doc.setTextColor(30, 41, 59);
-      doc.setFontSize(9);
-      doc.setFont("helvetica", "bold");
-      doc.text("Trainee Name:", 20, 38);
-      doc.setFont("helvetica", "normal");
-      doc.text(t.name, 52, 38);
+          <h4 style="font-size: 12px; margin: 10px 0 6px 0; color: #1E3A8A; border-bottom: 1px solid #eee; padding-bottom: 3px;">
+            प्रात्यक्षिक जॉब मूल्यांकन तपशील (DGT Assessment Matrix - 100 Marks)
+          </h4>
 
-      doc.setFont("helvetica", "bold");
-      doc.text("Roll Number:", 20, 45);
-      doc.setFont("helvetica", "normal");
-      doc.text(t.roll, 52, 45);
+          <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 16px;">
+            <thead>
+              <tr style="background: #f1f5f9; text-align: left;">
+                <th style="border: 1px solid #999; padding: 6px;">मूल्यांकन निकष (Evaluation Criteria)</th>
+                <th style="border: 1px solid #999; padding: 6px; text-align: center; width: 100px;">कमाल गुण</th>
+                <th style="border: 1px solid #999; padding: 6px; text-align: center; width: 100px;">प्राप्त गुण</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="border: 1px solid #999; padding: 6px;">१. सुरक्षा व साधनांची हाताळणी (Safety & Tool Handling)</td>
+                <td style="border: 1px solid #999; padding: 6px; text-align: center;">१५</td>
+                <td style="border: 1px solid #999; padding: 6px; text-align: center; font-weight: bold;">${t.safety || 12}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #999; padding: 6px;">२. कामाची अचूकता / डायमेंशन (Accuracy & Measurements)</td>
+                <td style="border: 1px solid #999; padding: 6px; text-align: center;">३५</td>
+                <td style="border: 1px solid #999; padding: 6px; text-align: center; font-weight: bold;">${t.accuracy || 28}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #999; padding: 6px;">३. फिनिशिंग व मांडणी (Workmanship & Finishing)</td>
+                <td style="border: 1px solid #999; padding: 6px; text-align: center;">२५</td>
+                <td style="border: 1px solid #999; padding: 6px; text-align: center; font-weight: bold;">${t.finish || 20}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #999; padding: 6px;">४. कार्यपद्धती व तंत्र (Sequence of Operation)</td>
+                <td style="border: 1px solid #999; padding: 6px; text-align: center;">१५</td>
+                <td style="border: 1px solid #999; padding: 6px; text-align: center; font-weight: bold;">${t.method || 12}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #999; padding: 6px;">५. वेळेचे नियोजन (Time Adherence)</td>
+                <td style="border: 1px solid #999; padding: 6px; text-align: center;">१०</td>
+                <td style="border: 1px solid #999; padding: 6px; text-align: center; font-weight: bold;">${t.time || 8}</td>
+              </tr>
+              <tr style="background: #f8fafc; font-weight: bold;">
+                <td style="border: 1px solid #999; padding: 6px; text-align: right;">एकूण गुण:</td>
+                <td style="border: 1px solid #999; padding: 6px; text-align: center;">१००</td>
+                <td style="border: 1px solid #999; padding: 6px; text-align: center; color: #1E3A8A; font-size: 13px;">${tot}</td>
+              </tr>
+            </tbody>
+          </table>
 
-      doc.setFont("helvetica", "bold");
-      doc.text("Trade & Year:", 20, 52);
-      doc.setFont("helvetica", "normal");
-      doc.text("Electronics Mechanic (First Year)", 52, 52);
+          <table style="width: 100%; border: 1px solid #999; border-collapse: collapse; font-size: 11px; margin-bottom: 40px;">
+            <tr>
+              <td style="padding: 6px; width: 50%; border: 1px solid #999;"><b>मासिक उपस्थिती:</b> ${t.attPercent}%</td>
+              <td style="padding: 6px; width: 50%; border: 1px solid #999;"><b>प्राप्त अंतिम ग्रेड:</b> <span style="font-weight: bold; color: #1E3A8A;">${getGrade(tot)}</span></td>
+            </tr>
+          </table>
 
-      doc.setFont("helvetica", "bold");
-      doc.text("Category & Stipend:", 20, 59);
-      doc.setFont("helvetica", "normal");
-      doc.text(`${t.cat} | ${t.stipend} (Rs.${t.amt}/- per month)`, 52, 59);
+          <div style="display: flex; justify-content: space-between; font-size: 11px;">
+            <div style="text-align: center;">
+              ___________________________<br>
+              <b>(पगारे बी. डब्ल्यू.)</b><br>
+              शिल्प निदेशक (Electronics Mechanic)
+            </div>
+            <div style="text-align: center;">
+              ___________________________<br>
+              <b>प्राचार्य / उपप्राचार्य</b><br>
+              शासकीय आयटीआय शेवगाव
+            </div>
+          </div>
+        </div>
+      `;
 
-      // Photo placeholder or photo box
-      doc.rect(160, 34, 28, 30);
-      if (t.photo && t.photo.startsWith('data:image')) {
-        try {
-          doc.addImage(t.photo, 'JPEG', 160, 34, 28, 30);
-        } catch (e) {
-          doc.setFontSize(8);
-          doc.text("Photo", 170, 50);
-        }
-      } else {
-        doc.setFontSize(8);
-        doc.setTextColor(150, 150, 150);
-        doc.text("Photo Box", 168, 50);
-      }
-
-      // Evaluation Criteria Table
-      const evalData = [
-        ["1. Safety & Tool Handling", "15", `${t.safety || 12}`],
-        ["2. Accuracy & Measurements / Tolerances", "35", `${t.accuracy || 28}`],
-        ["3. Finishing & Workmanship (Soldering)", "25", `${t.finish || 20}`],
-        ["4. Proper Sequence of Operation", "15", `${t.method || 12}`],
-        ["5. Time Adherence & Planning", "10", `${t.time || 8}`],
-        ["TOTAL PRACTICAL MARKS", "100", `${tot}`]
-      ];
-
-      doc.autoTable({
-        startY: 75,
-        head: [['Evaluation Criteria (DGT Standards)', 'Max Marks', 'Obtained Marks']],
-        body: evalData,
-        theme: 'grid',
-        headStyles: { fillColor: [30, 58, 138], textColor: 255, fontStyle: 'bold', halign: 'center' },
-        styles: { fontSize: 9, cellPadding: 3, font: 'helvetica' },
-        columnStyles: {
-          0: { fontStyle: 'bold' },
-          1: { halign: 'center', cellWidth: 35 },
-          2: { halign: 'center', fontStyle: 'bold', cellWidth: 40 }
-        },
-        foot: [['Attendance: ' + t.attPercent + '%', 'Overall Grade:', getGrade(tot)]],
-        footStyles: { fillColor: [241, 245, 249], textColor: [15, 23, 42], fontStyle: 'bold', fontSize: 10 }
-      });
-
-      // Signatures
-      const finalY = doc.lastAutoTable.finalY + 35;
-      doc.setTextColor(30, 41, 59);
-      doc.setFontSize(9);
-      doc.text("____________________________", 25, finalY);
-      doc.text("(Pagare B. W.)", 35, finalY + 5);
-      doc.text("Craft Instructor, Electronics Mechanic", 25, finalY + 9);
-
-      doc.text("____________________________", 140, finalY);
-      doc.text("Principal / Vice Principal", 145, finalY + 5);
-      doc.text("Govt ITI Shevgaon", 150, finalY + 9);
-
-      doc.save(`Progress_Card_${t.roll}_${t.name.replace(/\s+/g, '_')}.pdf`);
+      html2pdf().set({
+        margin: 10,
+        filename: `Progress_Card_${t.roll}_${t.name.replace(/\s+/g, '_')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }).from(area).save();
     }
 
-    // ३. एकत्रित सर्व विद्यार्थ्यांचे प्रोग्रेस शीट (Batch Consolidated Sheet Direct)
-    function exportBatchProgressPDFDirect() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-      const curDate = new Date().toLocaleDateString('en-GB');
+    // ३. एकत्रित सर्व विद्यार्थ्यांचे प्रोग्रेस शीट (Batch Progress Card Sheet PDF)
+    function exportBatchProgressPDF() {
+      const area = document.getElementById('pdfExportArea');
+      area.innerHTML = `
+        <div style="padding: 24px; font-family: Arial, sans-serif; color: #111;">
+          <div style="text-align: center; border-bottom: 2px solid #1E3A8A; padding-bottom: 8px; margin-bottom: 12px;">
+            <h2 style="margin: 0; font-size: 18px; color: #1E3A8A; font-weight: bold;">शासकीय औद्योगिक प्रशिक्षण संस्था, शेवगाव</h2>
+            <h3 style="margin: 3px 0; font-size: 13px;">वार्षिक / सत्रनिहाय शिकाऊ प्रगती पत्रक (Consolidated Progress Register)</h3>
+            <p style="margin: 0; font-size: 11px; color: #555;">Trade: Electronics Mechanic (First Year) | शिल्प निदेशक: पगारे बी. डब्ल्यू.</p>
+          </div>
 
-      // Top Header
-      doc.setFillColor(30, 58, 138);
-      doc.rect(0, 0, 297, 20, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(13);
-      doc.setFont("helvetica", "bold");
-      doc.text("GOVERNMENT ITI SHEVGAON - CONSOLIDATED PROGRESS REGISTER", 148, 9, { align: "center" });
-      doc.setFontSize(9);
-      doc.setFont("helvetica", "normal");
-      doc.text("Trade: Electronics Mechanic (First Year) | Craft Instructor: Pagare B. W. | Session: 2026-2027", 148, 15, { align: "center" });
+          <table style="width: 100%; border-collapse: collapse; font-size: 10px; text-align: center;">
+            <thead>
+              <tr style="background: #f1f5f9;">
+                <th style="border: 1px solid #999; padding: 5px;">रोल नं.</th>
+                <th style="border: 1px solid #999; padding: 5px; text-align: left;">प्रशिक्षणार्थ्याचे नाव</th>
+                <th style="border: 1px solid #999; padding: 5px;">प्रवर्ग</th>
+                <th style="border: 1px solid #999; padding: 5px;">हजेरी %</th>
+                <th style="border: 1px solid #999; padding: 5px;">सुरक्षा (१५)</th>
+                <th style="border: 1px solid #999; padding: 5px;">अचूकता (३५)</th>
+                <th style="border: 1px solid #999; padding: 5px;">फिनिशिंग (२५)</th>
+                <th style="border: 1px solid #999; padding: 5px;">एकूण (१००)</th>
+                <th style="border: 1px solid #999; padding: 5px;">ग्रेड</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${trainees.map(t => {
+                const tot = getTotalMarks(t);
+                return `
+                  <tr>
+                    <td style="border: 1px solid #999; padding: 5px; font-weight: bold;">\${t.roll}</td>
+                    <td style="border: 1px solid #999; padding: 5px; text-align: left; font-weight: bold;">\${t.name}</td>
+                    <td style="border: 1px solid #999; padding: 5px;">\${t.cat}</td>
+                    <td style="border: 1px solid #999; padding: 5px;">\${t.attPercent}%</td>
+                    <td style="border: 1px solid #999; padding: 5px;">\${t.safety || 12}</td>
+                    <td style="border: 1px solid #999; padding: 5px;">\${t.accuracy || 28}</td>
+                    <td style="border: 1px solid #999; padding: 5px;">\${t.finish || 20}</td>
+                    <td style="border: 1px solid #999; padding: 5px; font-weight: bold;">\${tot}</td>
+                    <td style="border: 1px solid #999; padding: 5px; font-weight: bold;">\${getGrade(tot)}</td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
 
-      const batchData = trainees.map(t => {
-        const tot = getTotalMarks(t);
-        return [
-          t.roll,
-          t.name,
-          t.cat,
-          `${t.attPercent}%`,
-          `${t.safety || 12}`,
-          `${t.accuracy || 28}`,
-          `${t.finish || 20}`,
-          `${t.method || 12}`,
-          `${t.time || 8}`,
-          `${tot} / 100`,
-          getGrade(tot)
-        ];
-      });
+          <div style="margin-top: 40px; display: flex; justify-content: space-between; font-size: 11px;">
+            <div style="text-align: center;">
+              <b>(पगारे बी. डब्ल्यू.)</b><br>
+              शिल्प निदेशक
+            </div>
+            <div style="text-align: center;">
+              <b>प्राचार्य</b><br>
+              शासकीय आयटीआय शेवगाव
+            </div>
+          </div>
+        </div>
+      `;
 
-      doc.autoTable({
-        startY: 28,
-        head: [['Roll', 'Trainee Name', 'Cat', 'Att %', 'Safety (15)', 'Accuracy (35)', 'Finish (25)', 'Method (15)', 'Time (10)', 'Total (100)', 'Grade']],
-        body: batchData,
-        theme: 'grid',
-        headStyles: { fillColor: [30, 58, 138], textColor: 255, fontStyle: 'bold', halign: 'center' },
-        styles: { fontSize: 8.5, cellPadding: 2.5, font: 'helvetica' },
-        columnStyles: {
-          0: { halign: 'center', fontStyle: 'bold', cellWidth: 18 },
-          1: { fontStyle: 'bold', cellWidth: 50 },
-          2: { halign: 'center', cellWidth: 16 },
-          3: { halign: 'center', fontStyle: 'bold', cellWidth: 18 },
-          4: { halign: 'center', cellWidth: 22 },
-          5: { halign: 'center', cellWidth: 24 },
-          6: { halign: 'center', cellWidth: 22 },
-          7: { halign: 'center', cellWidth: 22 },
-          8: { halign: 'center', cellWidth: 20 },
-          9: { halign: 'center', fontStyle: 'bold', cellWidth: 25 },
-          10: { halign: 'center', fontStyle: 'bold', cellWidth: 32 }
-        }
-      });
-
-      const finalY = doc.lastAutoTable.finalY + 25;
-      doc.setTextColor(30, 41, 59);
-      doc.setFontSize(9);
-      doc.text("____________________________", 30, finalY);
-      doc.text("(Pagare B. W.) Craft Instructor", 30, finalY + 5);
-
-      doc.text("____________________________", 220, finalY);
-      doc.text("Principal, Govt ITI Shevgaon", 220, finalY + 5);
-
-      doc.save(`ITI_Shevgaon_Consolidated_Progress_Report.pdf`);
+      html2pdf().set({
+        margin: 10,
+        filename: `ITI_Shevgaon_Consolidated_Progress_Sheet.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+      }).from(area).save();
     }
 
     renderAll();
+  </script>
 </body>
 </html>
